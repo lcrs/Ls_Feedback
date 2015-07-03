@@ -1,14 +1,10 @@
-// Write input frame to a buffer and pass the address to Ls_FeedbackRead
+// Copy input frame to a buffer and pass the address to Ls_FeedbackRead
 // lewis@lewissaunders.com
 
 #include "half.h"
 #include <sys/mman.h>
 #include <fcntl.h>
-#ifdef __APPLE__
-	#include "/usr/discreet/presets/2016/sparks/spark.h"
-#else
-	#include "/usr/discreet/flame_2013.0.4/sparks/spark.h"
-#endif
+#include "/usr/discreet/presets/2016/sparks/spark.h"
 
 half *feedbackbuffer = NULL;
 int shmfd;
@@ -69,6 +65,9 @@ void SparkUnInitialise(SparkInfoStruct sparkInfo) {
 	*(void **)shmptr = NULL;
 	free(feedbackbuffer);
 	printf("Ls_FeedbackWrite: free(): %p\n", feedbackbuffer);
+	close(shmfd);
+	shm_unlink("Ls_Feedback");
+	munmap(shmptr, 8);
 }
 
 int SparkIsInputFormatSupported(SparkPixelFormat fmt) {

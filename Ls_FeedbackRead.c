@@ -4,11 +4,7 @@
 #include "half.h"
 #include <sys/mman.h>
 #include <fcntl.h>
-#ifdef __APPLE__
-	#include "/usr/discreet/presets/2016/sparks/spark.h"
-#else
-	#include "/usr/discreet/flame_2013.0.4/sparks/spark.h"
-#endif
+#include "/usr/discreet/presets/2016/sparks/spark.h"
 
 half *feedbackbuffer = NULL;
 int shmfd;
@@ -52,6 +48,7 @@ unsigned long *SparkProcess(SparkInfoStruct si) {
 		printf("Ls_FeedbackWrite: mmap() failed: %d\n", errno);
 		shmptr = NULL;
 	}
+	close(shmfd);
 	if(shmptr) {
 		feedbackbuffer = *(half **)shmptr;
 		if(feedbackbuffer) {
