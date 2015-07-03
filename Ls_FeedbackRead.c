@@ -2,6 +2,8 @@
 // lewis@lewissaunders.com
 
 #include "half.h"
+#include <sys/mman.h>
+#include <fcntl.h>
 #ifdef __APPLE__
 	#include "/usr/discreet/presets/2016/sparks/spark.h"
 #else
@@ -9,6 +11,8 @@
 #endif
 
 half *feedbackbuffer = NULL;
+int shmfd;
+void *shmptr = NULL;
 
 int getbuf(int n, SparkMemBufStruct *b) {
 	if(!sparkMemGetBuffer(n, b)) {
@@ -29,19 +33,34 @@ unsigned long *SparkProcess(SparkInfoStruct si) {
 
 	if(si.FrameNo == 0) {
 		// Pass through front input
+		if(!getbuf(1, &result)) return(NULL);
 		if(!getbuf(2, &front)) return(NULL);
 		printf("Ls_FeedbackRead: SparkProcess() passing front through\n");
-		return(front.Buffer);
+		sparkCopyBuffer(front.Buffer, result.Buffer);
+		return(result.Buffer);
 	}
 
 	if(!getbuf(1, &result)) return(NULL);
 
-	// Read pointer from socket
-	//
+	// Read shared pointer
+	shmfd = shm_open("Ls_Feedback", O_RDONLY, 0700);
+	if(shmfd == -1) {
+		printf("Ls_FeedbackRead: shm_open() failed: %d\n", errno);
+	}
+	shmptr = mmap(0, 8, PROT_READ, MAP_SHARED, shmfd, 0);
+	if(shmptr == MAP_FAILED) {
+		printf("Ls_FeedbackWrite: mmap() failed: %d\n", errno);
+		shmptr = NULL;
+	}
+	if(shmptr) {
+		feedbackbuffer = *(half **)shmptr;
+		if(feedbackbuffer) {
+			printf("Ls_FeedbackRead: copying from %p\n", feedbackbuffer);
+			memcpy(result.Buffer, feedbackbuffer, result.BufSize);
+			printf("Ls_FeedbackRead: ...copied\n");
+		}
+	}
 
-	// Copy frame to result buffer
-	//
-	
 	return(result.Buffer);
 }
 
