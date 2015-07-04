@@ -1,12 +1,12 @@
 // Read frame from buffer written by Ls_FeedbackWrite
 // lewis@lewissaunders.com
 
-#include "half.h"
+#include <sys/errno.h>
 #include <sys/mman.h>
 #include <fcntl.h>
 #include "/usr/discreet/presets/2016/sparks/spark.h"
 
-half *feedbackbuffer = NULL;
+void *feedbackbuffer = NULL;
 int shmfd;
 void *shmptr = NULL;
 
@@ -25,13 +25,10 @@ int getbuf(int n, SparkMemBufStruct *b) {
 unsigned long *SparkProcess(SparkInfoStruct si) {
 	SparkMemBufStruct result, front;
 
-	printf("Ls_FeedbackRead: SparkProcess()\n");
-
 	if(si.FrameNo == 0) {
 		// Pass through front input
 		if(!getbuf(1, &result)) return(NULL);
 		if(!getbuf(2, &front)) return(NULL);
-		printf("Ls_FeedbackRead: SparkProcess() passing front through\n");
 		sparkCopyBuffer(front.Buffer, result.Buffer);
 		return(result.Buffer);
 	}
@@ -50,11 +47,9 @@ unsigned long *SparkProcess(SparkInfoStruct si) {
 	}
 	close(shmfd);
 	if(shmptr) {
-		feedbackbuffer = *(half **)shmptr;
+		feedbackbuffer = *(void **)shmptr;
 		if(feedbackbuffer) {
-			printf("Ls_FeedbackRead: copying from %p\n", feedbackbuffer);
 			memcpy(result.Buffer, feedbackbuffer, result.BufSize);
-			printf("Ls_FeedbackRead: ...copied\n");
 		}
 	}
 

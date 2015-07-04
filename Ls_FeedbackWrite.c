@@ -1,12 +1,12 @@
 // Copy input frame to a buffer and pass the address to Ls_FeedbackRead
 // lewis@lewissaunders.com
 
-#include "half.h"
+#include <sys/errno.h>
 #include <sys/mman.h>
 #include <fcntl.h>
 #include "/usr/discreet/presets/2016/sparks/spark.h"
 
-half *feedbackbuffer = NULL;
+void *feedbackbuffer = NULL;
 int shmfd;
 void *shmptr = NULL;
 
@@ -27,11 +27,8 @@ unsigned long *SparkProcess(SparkInfoStruct si) {
 	if(!getbuf(1, &result)) return(NULL);
 	if(!getbuf(2, &front)) return(NULL);
 
-	printf("Ls_FeedbackWrite: SparkProcess()\n");
-
 	if(feedbackbuffer) {
 		memcpy(feedbackbuffer, front.Buffer, front.BufSize);
-		printf("Ls_FeedbackWrite: SparkProcess() did copy to %p\n", feedbackbuffer);
 		*(void **)shmptr = feedbackbuffer;
 	} else {
 		printf("Ls_FeedbackWrite: SparkProcess() but no feedbackbuffer!\n");
@@ -43,8 +40,7 @@ unsigned long *SparkProcess(SparkInfoStruct si) {
 }
 
 unsigned int SparkInitialise(SparkInfoStruct si) {
-	feedbackbuffer = (half *) malloc(si.FrameBytes);
-	printf("Ls_FeedbackWrite: malloc(): %d bytes at %p\n", si.FrameBytes, feedbackbuffer);
+	feedbackbuffer = (void *) malloc(si.FrameBytes);
 
 	shmfd = shm_open("Ls_Feedback", O_CREAT | O_RDWR, 0700);
 	if(shmfd == -1) {
@@ -64,7 +60,6 @@ unsigned int SparkInitialise(SparkInfoStruct si) {
 void SparkUnInitialise(SparkInfoStruct sparkInfo) {
 	*(void **)shmptr = NULL;
 	free(feedbackbuffer);
-	printf("Ls_FeedbackWrite: free(): %p\n", feedbackbuffer);
 	close(shmfd);
 	shm_unlink("Ls_Feedback");
 	munmap(shmptr, 8);
