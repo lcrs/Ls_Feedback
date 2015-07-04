@@ -9,6 +9,17 @@
 void *feedbackbuffer = NULL;
 int shmfd;
 void *shmptr = NULL;
+float uniqueseed = 0.0;
+
+SparkFloatStruct SparkFloat7 = {
+	0.0,						// Initial
+	-INFINITY,					// Min
+	+INFINITY,					// Max
+	0.001,						// Increment
+	0,							// Flags
+	(char *) "Unique seed %f",	// Name
+	NULL						// Callback
+};
 
 int getbuf(int n, SparkMemBufStruct *b) {
 	if(!sparkMemGetBuffer(n, b)) {
@@ -34,6 +45,14 @@ unsigned long *SparkProcess(SparkInfoStruct si) {
 		printf("Ls_FeedbackWrite: SparkProcess() but no feedbackbuffer!\n");
 		*(void **)shmptr = NULL;
 	}
+
+	// Increment unqiue seed
+	// This is an attempt to defeat Flame's caching, which presumably
+	// relies on hashing this value
+	uniqueseed += 0.01;
+	SparkFloat7.Value = uniqueseed;
+	sparkSetCurveKey(SPARK_UI_CONTROL, 7, si.FrameNo, uniqueseed);
+	sparkControlUpdate(7);
 
 	sparkCopyBuffer(front.Buffer, result.Buffer);
 	return(result.Buffer);
