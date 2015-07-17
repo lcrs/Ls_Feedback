@@ -1,0 +1,82 @@
+<ShaderNodePreset SupportsAdaptiveDegradation="False" SupportsAction="False" SupportsTransition="False" SupportsTimeline="False" TimelineUseBack="False" MatteProvider="False" CommercialUsePermitted="True" ShaderType="Matchbox" SoftwareVersion="2016.0.0" LimitInputsToTexture="True" Version="1" Description="This is a bit special-interest-only.  It takes a motion vector image with red/green X/Y absolute vectors and tries to make it divergence free, so there are no vectors which converge or overlap.  Important for fluid simulation but not much else :)
+
+lewis@lewissaunders.com" Name="Ls_Undiverge">
+   <Shader OutputBitDepth="Output" Index="1">
+      <Uniform ResDependent="None" Max="1000000.0" Min="0.0" Default="5.0" Inc="0.01" Tooltip="" Row="0" Col="0" Page="0" Type="float" DisplayName="Blur 1 size" Name="blur1size">
+      </Uniform>
+      <Uniform Index="0" NoInput="Error" Tooltip="" DisplayName="Vectors" InputColor="67, 77, 83" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="front">
+      </Uniform>
+   </Shader>
+   <Shader OutputBitDepth="Output" Index="2">
+      <Uniform Type="float" DisplayName="Blur 1 size" Name="blur1size">
+         <Duplicate>
+         </Duplicate>
+      </Uniform>
+      <Uniform InputColor="67, 77, 83" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="adsk_results_pass1">
+      </Uniform>
+   </Shader>
+   <Shader OutputBitDepth="Output" Index="3">
+      <Uniform InputColor="67, 77, 83" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="adsk_results_pass2">
+      </Uniform>
+      <Uniform ResDependent="None" Max="1000000.0" Min="0.0" Default="20.0" Inc="0.01" Tooltip="" Row="0" Col="1" Page="0" Type="float" DisplayName="Blur 2 size" Name="blur2size">
+      </Uniform>
+   </Shader>
+   <Shader OutputBitDepth="Output" Index="4">
+      <Uniform Type="float" DisplayName="Blur 2 size" Name="blur2size">
+         <Duplicate>
+         </Duplicate>
+      </Uniform>
+      <Uniform InputColor="67, 77, 83" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="adsk_results_pass3">
+      </Uniform>
+   </Shader>
+   <Shader OutputBitDepth="Output" Index="5">
+      <Uniform InputColor="67, 77, 83" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="adsk_results_pass4">
+      </Uniform>
+      <Uniform ResDependent="None" Max="1000000.0" Min="0.0" Default="100.0" Inc="0.01" Tooltip="" Row="0" Col="2" Page="0" Type="float" DisplayName="Blur 3 size" Name="blur3size">
+      </Uniform>
+   </Shader>
+   <Shader OutputBitDepth="Output" Index="6">
+      <Uniform Type="float" DisplayName="Blur 3 size" Name="blur3size">
+         <Duplicate>
+         </Duplicate>
+      </Uniform>
+      <Uniform InputColor="67, 77, 83" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="adsk_results_pass5">
+      </Uniform>
+   </Shader>
+   <Shader OutputBitDepth="Output" Index="7">
+      <Uniform ResDependent="None" Max="1000000.0" Min="-1000000.0" Default="1.0" Inc="0.01" Tooltip="" Row="1" Col="2" Page="0" Type="float" DisplayName="dx 3" Name="d3">
+      </Uniform>
+      <Uniform ResDependent="None" Max="1000000.0" Min="-1000000.0" Default="1.0" Inc="0.01" Tooltip="" Row="1" Col="0" Page="0" Type="float" DisplayName="dx 1" Name="d1">
+      </Uniform>
+      <Uniform Index="1" Tooltip="" DisplayName="front" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="front">
+         <Duplicate>
+         </Duplicate>
+      </Uniform>
+      <Uniform ResDependent="None" Max="1000000.0" Min="-1000000.0" Default="1.0" Inc="0.01" Tooltip="" Row="1" Col="1" Page="0" Type="float" DisplayName="dx 2" Name="d2">
+      </Uniform>
+      <Uniform ResDependent="None" Max="1000000.0" Min="-1000000.0" Default="1.0" Inc="0.01" Tooltip="" Row="2" Col="2" Page="0" Type="float" DisplayName="Amount 3" Name="amount3">
+      </Uniform>
+      <Uniform ResDependent="None" Max="1000000.0" Min="-1000000.0" Default="1.0" Inc="0.01" Tooltip="" Row="2" Col="1" Page="0" Type="float" DisplayName="Amount 2" Name="amount2">
+      </Uniform>
+      <Uniform ResDependent="None" Max="1000000.0" Min="-1000000.0" Default="1.0" Inc="0.01" Tooltip="" Row="2" Col="0" Page="0" Type="float" DisplayName="Amount 1" Name="amount1">
+      </Uniform>
+      <Uniform ResDependent="None" Max="1000000.0" Min="-1000000.0" Default="1.0" Inc="0.01" Tooltip="" Row="2" Col="3" Page="0" Type="float" DisplayName="Master amount" Name="amountmaster">
+      </Uniform>
+      <Uniform InputColor="67, 77, 83" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="adsk_results_pass6">
+      </Uniform>
+      <Uniform InputColor="67, 77, 83" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="adsk_results_pass4">
+      </Uniform>
+      <Uniform InputColor="67, 77, 83" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_CLAMP_TO_EDGE" GL_TEXTURE_WRAP_S="GL_CLAMP_TO_EDGE" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="adsk_results_pass2">
+      </Uniform>
+   </Shader>
+   <Page Name="Undiverge" Page="0">
+      <Col Name="Filter 1" Col="0" Page="0">
+      </Col>
+      <Col Name="Filter 2" Col="1" Page="0">
+      </Col>
+      <Col Name="Filter 3" Col="2" Page="0">
+      </Col>
+      <Col Name="Overall" Col="3" Page="0">
+      </Col>
+   </Page>
+</ShaderNodePreset>
