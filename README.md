@@ -5,4 +5,4 @@ Be careful to only use one pair at a time, and maybe don't change resolution wit
 
 The matchbox shader included can be used to do cheapo fluid simulation in conjunction with the Advect shader, like this:
 
-![Ls_Feedback demo](https://raw.github.com/lcrs/Ls_Feedback/master/Ls_Feedback.gif)
+![demo](https://github.com/lcrs/Ls_Feedback/raw/master/Ls_Feedback.gif)
